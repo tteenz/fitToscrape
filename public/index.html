@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Scraping With Mongoose</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-zF4BRsG/fLiTGfR9QL82DrilZxrwgY/+du4p/c7J72zZj+FLYq4zY00RylP9ZjiT"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=B612+Mono|Fredericka+the+Great|Quantico" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+  <style>
+
+    #wrapper {
+        width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 5%;
+      }
+      #articles {
+        display: inline-block;
+        overflow: auto;
+        width: 60%;
+        height: 700px;
+      }
+      #notes {
+        float: right;
+        width: 30%;
+      }
+      textarea, input {
+        display: block;
+        width: 100%;
+        background-color: #FCF5C7;
+      }
+      input {
+        height: 36px;
+        font-size: 24px;
+      }
+      textarea {
+        height: 200px;
+        font-size: 18px;
+      }
+      .row {
+        text-align:center;
+      }
+    .col-centered {
+      display:inline-block; 
+      float:none; 
+      text-align:left; 
+      margin-right:-4px;}
+    </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <section class="jumbotron">
+      <h1>Article Scraper</h1>
+      <br>
+      <h2>Make comments on articles you saved! </h2>
+      <br />
+
+      <a href="/scrape">
+        <button type="button" class="btn btn-danger">
+          Scrape New Article
+        </button>
+      </a>
+
+    </section>
+
+      <a href="/saved">
+        <button type="button" class="btn btn-danger">
+          Saved Articles
+        </button>
+      </a>
+      &nbsp;&nbsp;
+      <a href="https://www.womenwhocode.com/blog" target="_blank">
+        <button type="button" class="btn btn-danger">
+          Visit Women Who Code
+        </button>
+      </a>
+      <Br/><Br/>
+      <Br/>
+
+      <footer class="app-footer">
+
+      <div class="row justify-content-md-center">
+        <a href="https://github.com/tteenz/FriendFinder" target="_blank"><img src="https://66.media.tumblr.com/1edcd07b0276cfe9ad491f01850b8b88/tumblr_po4xdiuFYu1y5a3hjo1_400.png"
+            class="center" style="width:40" height="40"></a>
+      </div>
+      <br>
+      <div class="footer-copyright text-center py-3">© 2018 Copyright</div>
+
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

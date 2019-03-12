@@ -2,9 +2,11 @@
   "name": "package.json",
   "version": "1.0.0",
   "description": "Create web app to view and leave comments on news",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "mocha"
+    "test": "echo",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +15,7 @@
   "keywords": [
     "scrape"
   ],
-  "author": "node",
+  "author": "Tina Tran",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/tteenz/fitToscrape/issues"
@@ -24,6 +26,8 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.2",
-    "mongoose": "^5.4.19"
+    "logger": "0.0.1",
+    "mongoose": "^5.4.19",
+    "morgan": "^1.9.1"
   }
 }
