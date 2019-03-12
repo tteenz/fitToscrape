@@ -1,0 +1,29 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "Create web app to view and leave comments on news",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tteenz/fitToscrape.git"
+  },
+  "keywords": [
+    "scrape"
+  ],
+  "author": "node",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tteenz/fitToscrape/issues"
+  },
+  "homepage": "https://github.com/tteenz/fitToscrape#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mongoose": "^5.4.19"
+  }
+}
