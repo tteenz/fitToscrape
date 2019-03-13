@@ -1,0 +1,163 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 80px;
+  font-family: 'B612 Mono', monospace;
+}
+
+.jumbotron {
+  position: relative;
+  width: 100%;
+  padding: 0;
+  font-family: 'Fredericka the Great', cursive;
+  box-shadow: 10px 5px 20px 2px gray;
+  padding-top: 50px;
+}
+
+.jumbotron .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: auto;
+  background: linear-gradient(#333, black);
+  opacity: 0.7;
+}
+
+.jumbotron .caption {
+  padding-top: 70px;
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  text-align: center;
+}
+
+.jumbotron .caption h1,
+.jumbotron .caption p {
+  color: white;
+}
+
+.jumbotron h1 {
+  font-size: 80px;
+  font-weight: 800;
+}
+
+.jumbotron p {
+  font-size: 30px;
+}
+
+.panel {
+  border-radius: 0;
+  box-shadow: 3px 3px 20px lightslategrey;
+}
+
+.panel.panel-default .panel-heading {
+  background-color: grey;
+}
+
+.panel.panel-default .panel-heading h3 {
+  color: white;
+}
+
+.panel.panel-default .panel-heading .btn {
+  float: right;
+  margin-right: 5px;
+  margin-bottom: 50px;
+  margin-left: 5px;
+}
+
+.panel.panel-default .panel-body {
+  font-size: 16px;
+}
+
+.container > p {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  margin: 0;
+  font-weight: 800;
+  background: #0c7cd5;
+}
+
+.scrape-new {
+  cursor: pointer;
+}
+
+.m-top-80 {
+  margin-top: 80px;
+}
+
+textarea {
+  padding: 10px;
+  resize: none;
+}
+
+.bootbox-body .btn {
+  float: right;
+  margin: 5px;
+}
+
+.note.list-group-item {
+  padding: 30px;
+}
+
+.note.list-group-item .btn {
+  position: relative;
+  bottom: 10px;
+}
+
+
+
+#wrapper {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 5%;
+}
+#articles {
+  display: inline-block;
+  overflow: auto;
+  width: 60%;
+  height: 700px;
+}
+#notes {
+  float: right;
+  width: 30%;
+}
+textarea, input {
+  display: block;
+  width: 100%;
+  background-color: #FCF5C7;
+}
+input {
+  height: 36px;
+  font-size: 24px;
+}
+textarea {
+  height: 200px;
+  font-size: 18px;
+}
+.row {
+  text-align:center;
+}
+.col-centered {
+display:inline-block; 
+float:none; 
+text-align:left; 
+margin-right:-4px;}
+
+.btn-warning {
+  color: #f0ad4e;
+  background-color: white;
+  border-color: #eea236;
+  font-family: 'B612 Mono', monospace;
+
+}

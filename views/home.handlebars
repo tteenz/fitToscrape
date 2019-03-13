@@ -1,0 +1,51 @@
+<div class="container">
+
+  <section class="jumbotron">
+    <br>
+    <h1>Article Scraper</h1>
+    <br>
+    <h2>Make comments on articles you saved! </h2>
+    <br />
+
+    <a href="/">
+      <button type="button" class="btn btn-warning">
+        Scrape New Article
+      </button>
+    </a>
+    &nbsp;&nbsp;
+    <a href="/saved">
+    <button type="button" class="btn btn-warning">
+      Saved Articles
+    </button>
+  </a>
+  
+  &nbsp;&nbsp;
+  <a href="https://www.theverge.com/tech" target="_blank">
+    <button type="button" class="btn btn-warning">
+      Visit The Verge
+    </button>
+  </a>
+  <br>
+  <br>
+  </section>
+
+  
+ 
+  <div class="container article-container">
+    {{#each article}}
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading" id="panelHead">
+          <h3 class="panel-title">{{this.title}}</h3>
+        </div>
+        <div class="panel-body">
+          <a href="{{this.link}}">{{this.link}}</a>
+          <form class="navbar-form navbar-right" method="POST" action="/saved/{{this.id}}?_method=PUT">
+            <button type="submit" class="btn btn-warning" id="articleButton">Save Article</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
