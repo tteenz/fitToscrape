@@ -1,13 +1,15 @@
+var express = require("express");
+var request = require("request");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var methodOverride = require("method-override");
-
+var app = express();
 var Article = require('../models/Article')
 var Note = require('../models/Note')
 
-module.exports = function (router) {
+module.exports = function (app) {
 
-	router.get("/", function (req, res) {
+	app.get("/", function (req, res) {
 		Article.find({
 			saved: false
 		}, function (err, doc) {
@@ -22,7 +24,7 @@ module.exports = function (router) {
 	})
 
 	// Renders handledbars 
-	router.get("/saved", function (req, res) {
+	app.get("/saved", function (req, res) {
 		Article.find({ saved: true }).populate("notes", 'body').exec(function (err, doc) {
 			if (err) {
 				res.send(err);
@@ -34,13 +36,13 @@ module.exports = function (router) {
 	});
 
 	// Get route for scraping website
-	router.get('/scrape', function (req, res) {
-		// First, we grab the body of the html with axios
-		axios("https://www.theverge.com/tech", function (error, response, html) {
+	app.get('/scrape', function (req, res) {
+		// First, we grab the body of the html with request
+		axios("https://www.reuters.com/news/archive/technologyNews", function (error, response, html) {
 			// Then, we load that into cheerio and save it to $ for a shorthand selector
 			var $ = cheerio.load(html);
 			// Now, we grab every h2 within an article tag, and do the following:
-			$("h2.c-entry-box--compact__title").each(function (i, element) {
+			$("h3.story-title").each(function (i, element) {
 
 				// Save an empty result object
 				var result = {};
@@ -72,7 +74,7 @@ module.exports = function (router) {
 	})
 
 	// put route to updated the article to be saved:true
-	router.post("/saved/:id", function (req, res) {
+	app.post("/saved/:id", function (req, res) {
 		// res.redirect("/")
 		Article.update({ _id: req.params.id }, { $set: { saved: true } }, function (err, doc) {
 			if (err) {
@@ -85,7 +87,7 @@ module.exports = function (router) {
 	});
 
 	//delete route for articles on the saved page
-	router.post("/delete/:id", function (req, res) {
+	app.post("/delete/:id", function (req, res) {
 		Article.update({ _id: req.params.id }, { $set: { saved: false } }, function (err, doc) {
 			if (err) {
 				res.send(err);
@@ -97,7 +99,7 @@ module.exports = function (router) {
 	})
 
 	//post route for saving a note to an article
-	router.post("/saved/notes/:id", function (req, res) {
+	app.post("/saved/notes/:id", function (req, res) {
 		var newNote = new Note(req.body);
 		console.log("new note" + newNote);
 		newNote.save(function (error, doc) {
@@ -118,7 +120,7 @@ module.exports = function (router) {
 	});
 
 	// delete route to delete a note
-	router.post("/saved/delete/:id", function (req, res) {
+	app.post("/saved/delete/:id", function (req, res) {
 		Note.remove({ _id: req.params.id }, function (err, doc) {
 			if (err) {
 				res.send(err);
