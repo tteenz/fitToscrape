@@ -2,11 +2,11 @@ var express = require("express");
 var request = require("request");
 var axios = require("axios");
 var cheerio = require("cheerio");
+var logger = require("morgan");
 var methodOverride = require("method-override");
 var app = express();
 var Article = require('../models/Article')
 var Note = require('../models/Note')
-
 module.exports = function (app) {
 
 	app.get("/", function (req, res) {
@@ -38,11 +38,11 @@ module.exports = function (app) {
 	// Get route for scraping website
 	app.get('/scrape', function (req, res) {
 		// First, we grab the body of the html with request
-		axios("https://www.reuters.com/news/archive/technologyNews", function (error, response, html) {
+		axios("https://www.theverge.com/tech", function (error, response, html) {
 			// Then, we load that into cheerio and save it to $ for a shorthand selector
 			var $ = cheerio.load(html);
 			// Now, we grab every h2 within an article tag, and do the following:
-			$("h3.story-title").each(function (i, element) {
+			$("h2.c-entry-box--compact__tile").each(function (i, element) {
 
 				// Save an empty result object
 				var result = {};
