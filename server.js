@@ -7,7 +7,7 @@ var bodyParser = require("body-parser");
 var exphbs = require("express-handlebars");
 var axios = require("axios");
 
-var PORT = 3000;
+var PORT = process.env. PORT || 3000;
 
 // initialize Express
 var app = express();
@@ -173,7 +173,6 @@ app.get("/notes/:id", function(req, res) {
 });
 
 // listen for the routes
-var port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log("App is running on port " + port + "!");
+app.listen(PORT, function() {
+  console.log("App is running on port " + PORT + "!");
 });
