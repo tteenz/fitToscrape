@@ -173,6 +173,6 @@ app.get("/notes/:id", function(req, res) {
 });
 
 // listen for the routes
-app.listen(PORT, function() {
+app.listen(process.env.PORT || 2121, function() {
   console.log("App is running on port " + PORT + "!");
 });
