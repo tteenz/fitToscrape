@@ -40,7 +40,7 @@ $(document).ready(function () {
   // Post new note modals
   function createModalHTML(data) {
     var modalText = data.title;
-    $("#note-modal-title").text("Notes for article: " + data.title);
+    $("#note-modal-title").text("Notes: ");
     var noteItem;
     var noteDeleteBtn;
     console.log("data notes legnth ", data.notes.length)

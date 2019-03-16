@@ -1,24 +1,24 @@
 <div class="container article-container">
   <h3>Scraped Articles</h3>
   {{#each articles}}
-    <div class="card bg-light mb-3">
-      <div class="card-body">
-        <h5 class="card-title">{{title}}</h5>
-        <Br>
-        <a href="{{link}}" class="btn btn-warning" target="_blank">View Article</a>
-        <a data-articleId="{{_id}}" class="btn btn-warning save-btn">Save article</a>
-      </div>
+  <div class="card bg-light mb-3">
+    <div class="card-body">
+      <h5 class="card-title">{{title}}</h5>
+      <Br>
+      <a href="{{link}}" class="btn btn-warning" target="_blank">View Article</a>
+      <a data-articleId="{{_id}}" class="btn btn-warning save-btn">Save article</a>
     </div>
+  </div>
   {{/each}}
 </div>
 
 <footer class="app-footer">
 
-    <div class="row justify-content-md-center">
-      <a href="https://github.com/tteenz/fitToscrape" target="_blank"><img src="https://66.media.tumblr.com/1edcd07b0276cfe9ad491f01850b8b88/tumblr_po4xdiuFYu1y5a3hjo1_400.png"
-          class="center" style="width:40" height="40"></a>
-    </div>
+  <div class="row justify-content-md-center">
+    <a href="https://github.com/tteenz/fitToscrape" target="_blank"><img src="https://66.media.tumblr.com/1edcd07b0276cfe9ad491f01850b8b88/tumblr_po4xdiuFYu1y5a3hjo1_400.png"
+        class="center" style="width:40" height="40"></a>
+  </div>
 
-    <div class="footer-copyright text-center py-3">© 2019 Copyright</div>
+  <div class="footer-copyright text-center py-3">© 2019 Copyright</div>
 
-  </footer>
+</footer>

@@ -66,13 +66,11 @@ app.get("/scrape", function(req, res) {
       // trim() removes whitespace because the items return \n and \t before and after the text
       var title = $(element).find("h2.c-entry-box--compact__tile").text().trim();
       var link = $(element).find("h2.c-entry-box--compact__tile").attr("href");
-
       // if these are present in the scraped data, create an article in the database collection
       if (title && link) {
         db.Article.create({
             title: title,
-            link: link,
-            intro: intro
+            link: link
           },
           function(err, inserted) {
             if (err) {
