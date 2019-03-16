@@ -1,3 +1,5 @@
+logs
 node_modules/
+jspm_packages/
 .env
-npm-debug.log
+

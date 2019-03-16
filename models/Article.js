@@ -1,27 +1,32 @@
-// Require mongoose
 var mongoose = require("mongoose");
+
+// Save a reference to the Schema constructor
 var Schema = mongoose.Schema;
 
-// Create Schema
+// Create a new article Schema.
 var ArticleSchema = new Schema({
   title: {
     type: String,
-    required: true
+    require: false
   },
   link: {
     type: String,
-    required: true
+    unique: true,
+    require: false
   },
   saved: {
     type: Boolean,
     default: false
   },
-  notes: [{
-    type: Schema.Types.ObjectId,
-    ref: "Note"
-  }]
+  notes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Note"
+    }
+  ]
 });
 
+// Create model
 var Article = mongoose.model("Article", ArticleSchema);
 
 // Export the model

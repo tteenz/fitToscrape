@@ -1,55 +1,180 @@
-//Dependencies
-var express = require('express')
-var bodyParser = require("body-parser");
+// require dependencies
+var express = require("express");
 var mongoose = require("mongoose");
-var logger = require("morgan");
-// var axios = require("axios");
-// var cheerio = require("cheerio");
+var axios = require("axios");
+var cheerio = require("cheerio");
+var bodyParser = require("body-parser");
+var exphbs = require("express-handlebars");
+var axios = require("axios");
 
-//Models
-var Note = require("./models/Note.js");
-var Article = require("./models/Article.js");
+var PORT = process.env.PORT || 2121;
 
-var methodOverride = require("method-override");
-mongoose.Promise = Promise;
+// initialize Express
+var app = express();
 
-//initialize express
-var app = express()
-var router = express.Router();
-
-//
-require("./routes/routes")(router);
-app.use(logger("dev"));
+// use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(bodyParser.json({
+  type: "application/json"
+}));
+
+// serve the public directory
 app.use(express.static("public"));
-app.use(router);
 
-// Database configuration with mongoose
-// mongoose.connect("mongodb://localhost/mongo-news-scraper");
-//define local mongoDB URI
-if(process.env.MONGODB_URI){
-	//THIS EXECUTES IF THIS IS IN HEROKU
-	mongoose.connect(process.env.MONGODB_URI);
-}else {
-	mongoose.connect("mongodb://localhost/fitToscrape")
-}
+// use promises with Mongo and connect to the database
+var databaseUrl = "news";
+mongoose.Promise = Promise; 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/fitToscrape";
+mongoose.connect(MONGODB_URI);
 
-var db = mongoose.connection;
-
-// Set up Handlebars.
-var exphbs = require("express-handlebars");
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+// use handlebars
+app.engine("handlebars", exphbs({
+  defaultLayout: "main"
+}));
 app.set("view engine", "handlebars");
-app.use(methodOverride("_method"));
 
-// Once logged in to the db through mongoose, log a success message
-db.once("open", function() {
-  console.log("Connection successful.");
+// Hook mongojs configuration to the db variable
+var db = require("./models");
+
+// get all articles from the database that are not saved
+app.get("/", function(req, res) {
+
+  db.Article.find({
+      saved: false
+    },
+
+    function(error, dbArticle) {
+      if (error) {
+        console.log(error);
+      } else {
+        res.render("index", {
+          articles: dbArticle
+        });
+      }
+    })
+})
+
+// use cheerio to scrape stories from TechCrunch and store them
+app.get("/scrape", function(req, res) {
+  axios("https://www.theverge.com/tech", function(error, response, html) {
+    // Load the html body from axios into cheerio
+    var $ = cheerio.load(html);
+    $("h2.c-entry-box--compact__tile").each(function(i, element) {
+
+      // trim() removes whitespace because the items return \n and \t before and after the text
+      var title = $(element).find("h2.c-entry-box--compact__tile").text().trim();
+      var link = $(element).find("h2.c-entry-box--compact__tile").attr("href");
+
+      // if these are present in the scraped data, create an article in the database collection
+      if (title && link) {
+        db.Article.create({
+            title: title,
+            link: link,
+            intro: intro
+          },
+          function(err, inserted) {
+            if (err) {
+              // log the error if one is encountered during the query
+              console.log(err);
+            } else {
+              // otherwise, log the inserted data
+              console.log(inserted);
+            }
+          });
+        // if there are 10 articles, then return the callback to the frontend
+        console.log(i);
+        if (i === 10) {
+          return res.sendStatus(200);
+        }
+      }
+    });
+  });
 });
 
-// Listen on port 3030
-app.listen(process.env.PORT || 3030, function() {
-  console.log("App running on port 3030!");
+// route for retrieving all the saved articles
+app.get("/saved", function(req, res) {
+  db.Article.find({
+      saved: true
+    })
+    .then(function(dbArticle) {
+      // if successful, then render with the handlebars saved page
+      res.render("saved", {
+        articles: dbArticle
+      })
+    })
+    .catch(function(err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    })
+
+});
+
+// route for setting an article to saved
+app.put("/saved/:id", function(req, res) {
+  db.Article.findByIdAndUpdate(
+      req.params.id, {
+        $set: req.body
+      }, {
+        new: true
+      })
+    .then(function(dbArticle) {
+      res.render("saved", {
+        articles: dbArticle
+      })
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// route for saving a new note to the db and associating it with an article
+app.post("/submit/:id", function(req, res) {
+  db.Note.create(req.body)
+    .then(function(dbNote) {
+      var articleIdFromString = mongoose.Types.ObjectId(req.params.id)
+      return db.Article.findByIdAndUpdate(articleIdFromString, {
+        $push: {
+          notes: dbNote._id
+        }
+      })
+    })
+    .then(function(dbArticle) {
+      res.json(dbNote);
+    })
+    .catch(function(err) {
+      // If an error occurs, send it back to the client
+      res.json(err);
+    });
+});
+
+// route to find a note by ID
+app.get("/notes/article/:id", function(req, res) {
+  db.Article.findOne({"_id":req.params.id})
+    .populate("notes")
+    .exec (function (error, data) {
+        if (error) {
+            console.log(error);
+        } else {
+          res.json(data);
+        }
+    });        
+});
+
+
+app.get("/notes/:id", function(req, res) {
+
+  db.Note.findOneAndRemove({_id:req.params.id}, function (error, data) {
+      if (error) {
+          console.log(error);
+      } else {
+      }
+      res.json(data);
+  });
+});
+
+// listen for the routes
+app.listen(PORT, function() {
+  console.log("App is running on port " + PORT + "!");
 });

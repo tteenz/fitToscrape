@@ -1,20 +1,35 @@
+
+.display-4 {
+  font-size: 60px;
+  font-weight: bolder;
+}
+
+.lead {
+  font-size: 40px;
+  font-weight: bolder;
+}
+
+.note-item-list {
+  padding: 5px;
+}
+
+
 html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 80px;
   font-family: 'B612 Mono', monospace;
 }
 
 .jumbotron {
   position: relative;
   width: 100%;
-  padding: 0;
   font-family: 'Fredericka the Great', cursive;
   box-shadow: 10px 5px 20px 2px gray;
   padding-top: 50px;
+  padding-bottom: 12px;
 }
 
 .jumbotron .overlay {
@@ -50,27 +65,23 @@ body {
   font-size: 30px;
 }
 
-.panel {
+.card.bg-light.mb-3 {
   border-radius: 0;
   box-shadow: 3px 3px 20px lightslategrey;
 }
 
-.panel.panel-default .panel-heading {
-  background-color: grey;
-}
 
-.panel.panel-default .panel-heading h3 {
+.card.bg-light.mb-3 .card-body h3 {
   color: white;
 }
 
-.panel.panel-default .panel-heading .btn {
+.card.bg-light.mb-3 .card-body .btn {
   float: right;
   margin-right: 5px;
-  margin-bottom: 50px;
   margin-left: 5px;
 }
 
-.panel.panel-default .panel-body {
+.card.bg-light.mb-3 .panel-body {
   font-size: 16px;
 }
 
@@ -154,10 +165,21 @@ float:none;
 text-align:left; 
 margin-right:-4px;}
 
-.btn-warning {
+.btn-warning, .btn.btn-warning.save-btn, 
+.btn.btn-warning.unsave-btn, .btn.btn-warning.note-modal-btn {
   color: #f0ad4e;
   background-color: white;
   border-color: #eea236;
   font-family: 'B612 Mono', monospace;
 
 }
+
+btn.btn-warning.delete-note-modal {
+  padding: 8px 15px;
+}
+
+.app-footer { 
+  margin-top: 65px;
+  margin-bottom: 10px;
+}
+

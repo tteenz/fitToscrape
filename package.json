@@ -1,35 +1,32 @@
 {
-  "name": "package.json",
+  "name": "allthenews",
   "version": "1.0.0",
-  "description": "Create web app to view and leave comments on news",
+  "description": "Web app that lets user view and leave comments on articles.",
   "main": "server.js",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.2",
+    "mongoose": "^5.4.19",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "watch": "nodemon server.js"
+    "test": "echo",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tteenz/fitToscrape.git"
+    "url": "https://github.com/tteenz/fitToscrape.git"
   },
   "keywords": [
+    "webapp",
+    "news",
+    "articles",
+    "tech",
     "scrape"
   ],
   "author": "Tina Tran",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/tteenz/fitToscrape/issues"
-  },
-  "homepage": "https://github.com/tteenz/fitToscrape#readme",
-  "dependencies": {
-    "axios": "^0.18.0",
-    "body-parser": "^1.18.3",
-    "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.4",
-    "express-handlebars": "^3.0.0",
-    "method-override": "^3.0.0",
-    "mongoose": "^5.4.19",
-    "morgan": "^1.9.1",
-    "request": "^2.88.0"
-  }
+  "license": "ISC"
 }
