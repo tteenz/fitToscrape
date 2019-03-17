@@ -60,7 +60,7 @@ app.get("/", function (req, res) {
 
 // use cheerio to scrape stories from TechCrunch and store them
 app.get("/scrape", function (req, res) {
-  axios.get("https://www.theverge.com/tech", function (error, response, html) {
+  axios("https://www.theverge.com/tech", function (error, response, html) {
     // Load the html body from axios into cheerio
     var $ = cheerio.load(html);
     $("h2.c-entry-box--compact__title").each(function (i, element) {
@@ -91,7 +91,6 @@ app.get("/scrape", function (req, res) {
       }
     });
   });
-  res.send("Scrape Complete");
 });
 
 // Routes for saved articles
