@@ -7,7 +7,7 @@ var bodyParser = require("body-parser");
 var exphbs = require("express-handlebars");
 var axios = require("axios");
 
-var PORT = process.env. PORT || 3000;
+var PORT = process.env.PORT || 8000;
 
 // initialize Express
 var app = express();
@@ -25,9 +25,11 @@ app.use(express.static("public"));
 
 // use promises with Mongo and connect to the database
 var databaseUrl = "news";
-mongoose.Promise = Promise; 
+mongoose.Promise = Promise;
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/fitToscrape";
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true});
+mongoose.set('useCreateIndex', true);
+
 
 // use handlebars
 app.engine("handlebars", exphbs({
@@ -39,13 +41,13 @@ app.set("view engine", "handlebars");
 var db = require("./models");
 
 // get all articles from the database that are not saved
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
 
   db.Article.find({
-      saved: false
-    },
+    saved: false
+  },
 
-    function(error, dbArticle) {
+    function (error, dbArticle) {
       if (error) {
         console.log(error);
       } else {
@@ -57,28 +59,28 @@ app.get("/", function(req, res) {
 })
 
 // use cheerio to scrape stories from TechCrunch and store them
-app.get("/scrape", function(req, res) {
-  axios("https://www.theverge.com/tech", function(error, response, html) {
+app.get("/scrape", function (req, res) {
+  axios.get("https://www.theverge.com/tech", function (error, response, html) {
     // Load the html body from axios into cheerio
     var $ = cheerio.load(html);
-    $("h2.c-entry-box--compact__tile").each(function(i, element) {
+    $("h2.c-entry-box--compact__title").each(function (i, element) {
 
       // trim() removes whitespace because the items return \n and \t before and after the text
-      var title = $(element).find("h2.c-entry-box--compact__tile").text().trim();
-      var link = $(element).find("h2.c-entry-box--compact__tile").attr("href");
+      var title = $(element).find("h2.c-entry-box--compact__title").text().trim();
+      var link = $(element).find("h2.c-entry-box--compact__title").attr("href");
       // if these are present in the scraped data, create an article in the database collection
       if (title && link) {
         db.Article.create({
-            title: title,
-            link: link
-          },
-          function(err, inserted) {
+          title: title,
+          link: link
+        },
+          function (err, inserted) {
             if (err) {
               // log the error if one is encountered during the query
               console.log(err);
             } else {
               // otherwise, log the inserted data
-              console.log(inserted);
+              console.log(dbArticle);
             }
           });
         // if there are 10 articles, then return the callback to the frontend
@@ -89,48 +91,48 @@ app.get("/scrape", function(req, res) {
       }
     });
   });
+  res.send("Scrape Complete");
 });
 
-// route for retrieving all the saved articles
-app.get("/saved", function(req, res) {
+// Routes for saved articles
+app.get("/saved", function (req, res) {
   db.Article.find({
-      saved: true
-    })
-    .then(function(dbArticle) {
-      // if successful, then render with the handlebars saved page
+    saved: true
+  })
+    .then(function (dbArticle) {
+      // Renders with handlebar
       res.render("saved", {
         articles: dbArticle
       })
     })
-    .catch(function(err) {
-      // If an error occurs, send the error back to the client
+    .catch(function (err) {
       res.json(err);
     })
 
 });
 
-// route for setting an article to saved
-app.put("/saved/:id", function(req, res) {
+// Routes for saving article
+app.put("/saved/:id", function (req, res) {
   db.Article.findByIdAndUpdate(
-      req.params.id, {
-        $set: req.body
-      }, {
-        new: true
-      })
-    .then(function(dbArticle) {
+    req.params.id, {
+      $set: req.body
+    }, {
+      new: true
+    })
+    .then(function (dbArticle) {
       res.render("saved", {
         articles: dbArticle
       })
     })
-    .catch(function(err) {
+    .catch(function (err) {
       res.json(err);
     });
 });
 
-// route for saving a new note to the db and associating it with an article
-app.post("/submit/:id", function(req, res) {
+// Routes for saving article
+app.post("/submit/:id", function (req, res) {
   db.Note.create(req.body)
-    .then(function(dbNote) {
+    .then(function (dbNote) {
       var articleIdFromString = mongoose.Types.ObjectId(req.params.id)
       return db.Article.findByIdAndUpdate(articleIdFromString, {
         $push: {
@@ -138,41 +140,40 @@ app.post("/submit/:id", function(req, res) {
         }
       })
     })
-    .then(function(dbArticle) {
+    .then(function (dbArticle) {
       res.json(dbNote);
     })
-    .catch(function(err) {
-      // If an error occurs, send it back to the client
+    .catch(function (err) {
       res.json(err);
     });
 });
 
-// route to find a note by ID
-app.get("/notes/article/:id", function(req, res) {
-  db.Article.findOne({"_id":req.params.id})
+// Routes for finding note
+app.get("/notes/article/:id", function (req, res) {
+  db.Article.findOne({ "_id": req.params.id })
     .populate("notes")
-    .exec (function (error, data) {
-        if (error) {
-            console.log(error);
-        } else {
-          res.json(data);
-        }
-    });        
+    .exec(function (error, data) {
+      if (error) {
+        console.log(error);
+      } else {
+        res.json(data);
+      }
+    });
 });
 
 
-app.get("/notes/:id", function(req, res) {
+app.get("/notes/:id", function (req, res) {
 
-  db.Note.findOneAndRemove({_id:req.params.id}, function (error, data) {
-      if (error) {
-          console.log(error);
-      } else {
-      }
-      res.json(data);
+  db.Note.findOneAndRemove({ _id: req.params.id }, function (error, data) {
+    if (error) {
+      console.log(error);
+    } else {
+    }
+    res.json(data);
   });
 });
 
-// listen for the routes
-app.listen(PORT, function() {
+// Listening
+app.listen(PORT, function () {
   console.log("App is running on port " + PORT + "!");
 });
