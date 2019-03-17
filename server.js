@@ -1,11 +1,11 @@
 // require dependencies
 var express = require("express");
+var logger = require("morgan");
 var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
 var bodyParser = require("body-parser");
 var exphbs = require("express-handlebars");
-var axios = require("axios");
 
 var PORT = process.env.PORT || 8000;
 
@@ -26,8 +26,9 @@ app.use(express.static("public"));
 // use promises with Mongo and connect to the database
 var databaseUrl = "news";
 mongoose.Promise = Promise;
+app.use(logger("dev"));
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/fitToscrape";
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true});
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 
 
@@ -58,38 +59,38 @@ app.get("/", function (req, res) {
     })
 })
 
-// use cheerio to scrape stories from TechCrunch and store them
+// Axios called to scrape articles
 app.get("/scrape", function (req, res) {
-  axios("https://www.theverge.com/tech", function (error, response, html) {
-    // Load the html body from axios into cheerio
-    var $ = cheerio.load(html);
+  axios.get("https://www.theverge.com/tech").then(function (response) {
+
+    var $ = cheerio.load(response.data);
+
+    // Grab h2 for title and link
     $("h2.c-entry-box--compact__title").each(function (i, element) {
 
-      // trim() removes whitespace because the items return \n and \t before and after the text
-      var title = $(element).find("h2.c-entry-box--compact__title").text().trim();
-      var link = $(element).find("h2.c-entry-box--compact__title").attr("href");
-      // if these are present in the scraped data, create an article in the database collection
-      if (title && link) {
-        db.Article.create({
-          title: title,
-          link: link
-        },
-          function (err, inserted) {
-            if (err) {
-              // log the error if one is encountered during the query
-              console.log(err);
-            } else {
-              // otherwise, log the inserted data
-              console.log(dbArticle);
-            }
-          });
-        // if there are 10 articles, then return the callback to the frontend
-        console.log(i);
-        if (i === 10) {
-          return res.sendStatus(200);
-        }
-      }
+      var result = {};
+
+      result.title = $(this)
+        .children("a")
+        .text();
+      result.link = $(this)
+        .children("a")
+        .attr("href");
+
+      console.log(result);
+
+      // Create a new Article 
+      db.Article.create(result)
+        .then(function (dbArticle) {
+          console.log(dbArticle);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     });
+
+    // If we were able to successfully scrape and save an Article, send a message to the client
+    res.send("Scrape Complete");
   });
 });
 
